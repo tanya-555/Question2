@@ -17,8 +17,12 @@ class SaveToDisk {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            out.close();
-            fos.close();
+            if(out!=null) {
+                out.close();
+            }
+            if(fos!=null) {
+                fos.close();
+            }
         }
     }
 }
