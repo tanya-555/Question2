@@ -1,11 +1,14 @@
 package Assignment2;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
 class Student implements Serializable {
+
+    enum CourseList {
+        A, B, C, D, E;
+    }
+
     private String name;
     private int age;
     private String address;
@@ -21,22 +24,27 @@ class Student implements Serializable {
     }
 
     String getName() {
+
         return name;
     }
 
     int getAge() {
+
         return age;
     }
 
     int getRollno() {
+
         return rollno;
     }
 
     String getAddress() {
+
         return address;
     }
 
     Set<Character> getCourses() {
+
         return courses;
     }
 }
