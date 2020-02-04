@@ -27,6 +27,7 @@ class compareList implements Comparator<Student> {
     }
 
     void setField(int field) {
+
         this.sortingField = field;
     }
 }

@@ -6,14 +6,16 @@ import java.io.*;
 public class Assignment2 {
     private static final long serialVersionUID = 18L;
     static File filename = new File("details.ser");
+
     //list of constants
     private static final String INVALID_CHOICE = "Invalid Choice!";
     private static final String INVALID_ORDER = "Invalid Order!";
     private static final String INVALID_INPUT = "Invalid Input!";
 
+    static Scanner scanner = new Scanner(System.in);
+
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
-        Scanner sc = new Scanner(System.in);
         ArrayList<Student> studentList = new ArrayList<Student>();
         if (filename.length() != 0) {
             studentList = loadDetails();
@@ -22,7 +24,7 @@ public class Assignment2 {
         while (choice != 5) {
             System.out.println("MENU \n 1. Add User Details \n 2. Display User Details \n 3. Delete User Details \n 4. Save User Details \n 5. Exit \n Enter your choice:");
             try {
-                choice = Integer.parseInt(sc.next());
+                choice = Integer.parseInt(scanner.next());
                 if (choice < 1 || choice > 5) {
                     System.out.println(INVALID_CHOICE);
                     continue;
@@ -33,57 +35,32 @@ public class Assignment2 {
             }
             switch (choice) {
                 case 1:
-                    AddDetails obj1 = new AddDetails();
-                    Student st = obj1.addStudent();
-                    studentList.add(st);
+                    AddDetails add_details = new AddDetails();
+                    Student student_detail = add_details.addStudent();
+                    studentList.add(student_detail);
                     Collections.sort(studentList, new compareByName());
                     break;
+
                 case 2:
-                    DisplayDetails obj2 = new DisplayDetails();
-                    obj2.display(studentList);
-                    System.out.println("Do you want to display result in sorted manner -(y/n):");
-                    char ch = sc.next().charAt(0);
-                    if (ch == 'y') {
-                        ArrayList<Student> temp = new ArrayList<Student>(studentList);
-                        System.out.println("Select field for sorting: \n 1. name \n 2. age \n 3. address \n 4. roll number");
-                        try {
-                            int field = Integer.parseInt(sc.next());
-                            compareList cl = new compareList();
-                            cl.setField(field);
-                            //sorting the list
-                            System.out.println("Select Order\n1.Ascending 2.Descending");
-                            int order = Integer.parseInt(sc.next());
-                            if (order == 1) {
-                                Collections.sort(temp, cl);
-                                obj2.display(temp);
-                            } else if (order == 2) {
-                                Collections.sort(temp, cl);
-                                Collections.reverse(temp);
-                                obj2.display(temp);
+                    DisplayDetails display_details = new DisplayDetails();
+                    display_details.display(studentList);
+                    displayInSortedOrder(studentList, display_details);
 
-                            } else {
-                                System.out.println(INVALID_ORDER);
-                            }
-
-                        } catch (NumberFormatException e) {
-                            System.out.println(INVALID_INPUT);
-                        }
-                    }
                     break;
                 case 3:
-                    DeleteEntry obj3 = new DeleteEntry();
-                    studentList = obj3.deleteDetails(studentList);
+                    DeleteEntry delete_details = new DeleteEntry();
+                    studentList = delete_details.deleteDetails(studentList);
                     break;
                 case 4:
-                    SaveToDisk obj4 = new SaveToDisk();
-                    obj4.saveDetails(filename, studentList);
+                    SaveToDisk save_details = new SaveToDisk();
+                    save_details.saveDetails(filename, studentList);
                     break;
                 case 5:
                     System.out.println("Do you want to save the latest changes? (y/n)");
-                    char save_changes = sc.next().charAt(0);
+                    char save_changes = scanner.next().charAt(0);
                     if (save_changes == 'y') {
-                        SaveToDisk obj5 = new SaveToDisk();
-                        obj5.saveDetails(filename, studentList);
+                        SaveToDisk save_detail = new SaveToDisk();
+                        save_detail.saveDetails(filename, studentList);
                         System.exit(0);
                     } else if (save_changes != 'n') {
                         System.out.println(INVALID_INPUT);
@@ -95,22 +72,59 @@ public class Assignment2 {
 
     }
 
+    private static void displayInSortedOrder(ArrayList<Student> studentList, DisplayDetails display_details) {
+        System.out.println("Do you want to display result in sorted manner -(y/n):");
+        char sort_choice = scanner.next().charAt(0);
+        if (sort_choice == 'y') {
+            ArrayList<Student> temp = new ArrayList<Student>(studentList);
+            System.out.println("Select field for sorting: \n 1. name \n 2. age \n 3. address \n 4. roll number");
+            try {
+                int sort_field = Integer.parseInt(scanner.next());
+                compareList cl = new compareList();
+                cl.setField(sort_field);
+
+                System.out.println("Select Order\n1.Ascending 2.Descending");
+                int order = Integer.parseInt(scanner.next());
+                if (order == 1) {
+                    Collections.sort(temp, cl);
+                    display_details.display(temp);
+                } else if (order == 2) {
+                    Collections.sort(temp, cl);
+                    Collections.reverse(temp);
+                    display_details.display(temp);
+
+                } else {
+                    System.out.println(INVALID_ORDER);
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println(INVALID_INPUT);
+            }
+        }
+    }
+
     private static ArrayList<Student> loadDetails() throws IOException, ClassNotFoundException {
         ArrayList<Student> temp = new ArrayList<Student>();
         FileInputStream file = null;
         ObjectInputStream in = null;
+
         //pre populating the data stored on the disk
         try {
             file = new FileInputStream(filename);
             in = new ObjectInputStream(file);
             temp = (ArrayList<Student>) in.readObject();
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            in.close();
-            file.close();
+            if (in != null) {
+                in.close();
+            }
+            if (file != null) {
+                file.close();
+            }
             return temp;
         }
     }
