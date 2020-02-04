@@ -5,10 +5,6 @@ import java.util.*;
 
 class Student implements Serializable {
 
-    enum CourseList {
-        A, B, C, D, E;
-    }
-
     private String name;
     private int age;
     private String address;
