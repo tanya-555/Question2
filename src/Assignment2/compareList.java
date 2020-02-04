@@ -12,6 +12,9 @@ class compareList implements Comparator<Student> {
         switch (sortingField) {
             case 1:
                 diff = obj1.getName().compareTo(obj2.getName());
+                if(diff == 0) {
+                    diff = obj1.getRollno() - obj2.getRollno();
+                }
                 break;
             case 2:
                 diff = obj1.getAge() - obj2.getAge();

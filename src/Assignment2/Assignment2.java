@@ -38,7 +38,9 @@ public class Assignment2 {
                     AddDetails add_details = new AddDetails();
                     Student student_detail = add_details.addStudent();
                     studentList.add(student_detail);
-                    Collections.sort(studentList, new compareByName());
+                    compareList comparison = new compareList();
+                    comparison.setField(1);
+                    Collections.sort(studentList, comparison);
                     break;
 
                 case 2:
@@ -80,16 +82,16 @@ public class Assignment2 {
             System.out.println("Select field for sorting: \n 1. name \n 2. age \n 3. address \n 4. roll number");
             try {
                 int sort_field = Integer.parseInt(scanner.next());
-                compareList cl = new compareList();
-                cl.setField(sort_field);
+                compareList compare_list = new compareList();
+                compare_list.setField(sort_field);
 
                 System.out.println("Select Order\n1.Ascending 2.Descending");
                 int order = Integer.parseInt(scanner.next());
                 if (order == 1) {
-                    Collections.sort(temp, cl);
+                    Collections.sort(temp, compare_list);
                     display_details.display(temp);
                 } else if (order == 2) {
-                    Collections.sort(temp, cl);
+                    Collections.sort(temp, compare_list);
                     Collections.reverse(temp);
                     display_details.display(temp);
 
